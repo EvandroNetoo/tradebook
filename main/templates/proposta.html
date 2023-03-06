@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+
+{% block 'head' %}{% endblock %}
+
+
+{% block 'titulo' %}Trade Book{% endblock %}
+
+
+{% block 'conteudo' %}
+
+<div class="modal fade" id="comprarmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Comprar livro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que quer comprar o livro <b>{{ livro.nome }}</b> por <b>R$ {{ preco_venda }}</b>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                <a href="{% url 'comprar_livro' livro.id %}" class="btn btn-success btn-md">Solicitar compra</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="emprestarmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pegar livro emprestado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que quer pegar o livro <b>{{ livro.nome }}</b> emprestado por <b>R$ {{ preco_venda }}</b>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                <a href="{% url 'pegar_emprestado_livro' livro.id %}" class="btn btn-success btn-md">Solicitar empréstimo </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="trocarmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Excluir livro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que quer exluir o livro <b>{{ livro.nome }}</b>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                <a href="{% url 'trocar_livro' livro.id %}" class="btn btn-success btn-md">Solicitar compra</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <br>
+    <h1>Proposta</h1>
+    <hr>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div style="display: flex; justify-content: center">
+                <img src="{{ livro.img.url }}" alt="capa livro {{ livro.nome }}" height="447" width="288px"
+                    style="border-radius: 5px;">
+            </div>
+
+            <h3>Informações do livro</h3>
+            <hr>
+            <p class="card-title"><b>Nome:</b> {{ livro.nome }}</p>
+            <p class="card-text"><b>Autor:</b> {{ livro.autor }}</p>
+            <p class="card-text"><b>Categoria:</b> {{ livro.categoria }}</p>
+            <p class="card-text"><b>Descriçao:</b> {{ livro.descricao }}</p>
+            <p class="card-text"><b>Propríetario:</b> {{ livro.perfil.usuario.nome }}</p>
+            <hr>
+            <div class="row">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Opção</th>
+                            <th scope="col">Preço</th>
+                            <th scope="col">Comfirmar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if livro.vender %}
+                        <tr>
+                            <td>Vender</td>
+                            <td>R$ {{ preco_venda }}</td>
+                            <td><button class="btn btn-sm btn-success " data-toggle="modal"
+                                data-target="#comprarmodal">Solicitar compra</button></td>
+                        </tr>
+                        {% endif %}
+                        {% if livro.emprestar %}
+                        <tr>
+                            <td>Emprestar</td>
+                            <td>R$ {{ preco_emprestimo }}</td>
+                            <td><button class="btn btn-sm btn-success" data-toggle="modal"
+                                data-target="#emprestarmodal">Solicitar empréstimo</button></td>
+                        </tr>
+                        {% endif %}
+                        {% if livro.trocar %}
+                        <tr>
+                            <td>Trocar</td>
+                            <td>Um livro seu</td>
+                            <td><button class="btn btn-sm btn-success" data-toggle="modal"
+                                data-target="#trocarmodal">Solicitar troca</button></td>
+                        </tr>
+                        {% endif %}
+                </table>
+
+
+            </div>
+
+
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+</div>
+
+
+{% endblock %}

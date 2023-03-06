@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+
+{% block 'head' %}{% endblock %}
+
+
+{% block 'titulo' %}Trade Book{% endblock %}
+
+
+{% block 'conteudo' %}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Excluir livro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que quer exluir o livro <b>{{ livro.nome }}</b>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                <a href="{% url 'excluir_livro' livro.id %}" class="btn btn-danger btn-md">Excluir</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <br>
+    <h1>Detalhes livro</h1>
+    <hr>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-6">
+            <form action="{% url 'atualizar_livro' livro.id %}" method="POST">
+                {% csrf_token %}
+                <label>Nome</label>
+                <input class="form-control" type="text" name="nome" value="{{ livro.nome }}">
+                <br>
+                <label>Autor</label>
+                <input class="form-control" type="text" name="autor" value="{{ livro.autor }}">
+                <br>
+                <textarea class="form-control" name="descricao">{{ livro.descricao }}</textarea>
+                <br>
+                <label>Categoria</label>
+                <select class="form-control" name="categoria">
+                    {% for categoria in categorias %}
+                    {% if categoria == livro.categoria %}
+                    <option selected value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                    {% else %}
+                    <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+                <br>
+                <div class="row">
+                    <div class="form-check col-lg-5">
+                        {% if livro.vender %}
+                        <input type="checkbox" name="vender" id="vende" onchange="vender()" checked>
+                        <label class="form-check-label" for="vende">
+                            Vender
+                        </label>
+
+                        <div class="input-group mb-3" id="preco_vendar" style="display: flex;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input class="form-control" type="number" step="0.01" value="{{ preco_venda }}" name="preco_venda"
+                                aria-label="Amount (to the nearest dollar)">
+                        </div>
+                        {% else %}
+                        <input type="checkbox" name="vender" id="vende" onchange="vender()">
+                        <label class="form-check-label" for="vende">
+                            Vender
+                        </label>
+
+                        <div class="input-group mb-3" id="preco_vendar" style="display: none;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input class="form-control" type="number" step="0.01" value="{{ preco_venda }}" name="preco_venda"
+                                aria-label="Amount (to the nearest dollar)">
+                        </div>
+                        {% endif%}
+                        
+                    </div>
+
+                    <div class="form-check col-lg-5">
+                        {% if livro.emprestar %}
+                        <input type="checkbox" name="emprestar" id="empresta" onchange="emprestar()" checked>
+                        <label class="form-check-label" for="empresta">
+                            Emprestar
+                        </label>
+
+                        <div class="input-group mb-3" id="preco_emprestimor" style="display: flex">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="number" class="form-control" step="0.01" value="{{ preco_emprestimo }}" name="preco_emprestimo"
+                                aria-label="Amount (to the nearest dollar)">
+                        </div>
+                        {% else %}
+                        <input type="checkbox" name="emprestar" id="empresta" onchange="emprestar()">
+                        <label class="form-check-label" for="empresta">
+                            Emprestar
+                        </label>
+
+                        <div class="input-group mb-3" id="preco_emprestimor" style="display: none">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="number" class="form-control" step="0.01" value="{{ preco_emprestimo }}" name="preco_emprestimo"
+                                aria-label="Amount (to the nearest dollar)">
+                        </div>
+                        {% endif%}
+                        
+                    </div>
+
+                    <div class="form-check col-lg-2">
+                        <input class="form-check-input" type="checkbox" id="trocar" name="trocar">
+                        <label class="form-check-label" for="trocar">
+                            Trocar
+                        </label>
+                    </div>
+                </div>
+                <br>
+                <div style="display: flex; justify-content: space-between">
+                    <button class="btn btn-success btn-md" type="submit">Salvar</button>
+
+                    <a href="{% url 'seus_livros_todos' %}" class="btn btn-secondary btn-md">Voltar</a>
+
+                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                        data-target="#exampleModal">Excluir</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+</div>
+
+<script>
+    const checkbox_vende = document.getElementById('vende')
+    const checkbox_empresta = document.getElementById('empresta')
+
+    checkbox_vende.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+            document.getElementById('preco_vendar').style.display = 'flex';
+        } else {
+            document.getElementById('preco_vendar').style.display = 'none';
+        }
+    })
+
+    checkbox_empresta.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+            document.getElementById('preco_emprestimor').style.display = 'flex';
+        } else {
+            document.getElementById('preco_emprestimor').style.display = 'none';
+        }
+    })
+</script>
+
+{% endblock %}

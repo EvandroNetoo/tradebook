@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+
+{% block 'head' %}{% endblock %}
+
+
+{% block 'titulo' %}{% endblock %}
+
+
+{% block 'conteudo' %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+
+        <div class="col-md-6">
+            <br>
+            <h1>Login</h1>
+            <hr>
+            <form action="#" method="POST">
+                {% csrf_token %}
+                <label for="email">Email</label>
+                <input class="form-control" type="email" name="email" id="email" placeholder="Email" autocomplete="off"
+                    value="{{ email }}">
+                <br>
+                <label for="senha">Senha</label>
+                <input class="form-control" type="password" name="senha" id="senha" placeholder="Senha"
+                    autocomplete="off">
+                <br>
+
+                <div style="display: flex; justify-content: space-between;">
+                    <button class="btn btn-md btn-success" type="submit">Logar</button>
+
+                    <div>
+                        Não tem uma conta?
+                        <a class="btn btn-md btn-info" href="{% url 'cadastro' %}">Cadastro</a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-3"></div>
+    </div>
+
+</div>
+
+
+{% endblock %}

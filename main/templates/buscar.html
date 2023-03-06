@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+
+{% block 'head' %}{% endblock %}
+
+
+{% block 'titulo' %}Trade Book{% endblock %}
+
+
+{% block 'conteudo' %}
+
+<div class="container">
+    <br>
+    <h1>Catálogo</h1>
+    <hr>
+    <div class="row">
+
+        {% if livros%}
+        {% for livro in livros %}
+
+        <div class="col-sm-4" style="display: flex; justify-content: center; padding-bottom: 30px">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{{ livro.img.url }}" alt="Capa livro {{ livro.nome }}" height="447">
+                <div class="card-body">
+                    <h5 class="card-title">{{ livro.nome }}</h5>
+                    <p class="card-text">Autor: {{ livro.autor }}</p>
+                    <p class="card-text">Categoria: {{ livro.categoria }}</p>
+
+                    <p>
+
+                        |
+                        {% if livro.trocar %}
+                        Trocar |
+                        {% endif %}
+                        {% if livro.emprestar %}
+                        Emprestar |
+                        {% endif %}
+                        {% if livro.vender %}
+                        Vender |
+                        {% endif %}
+
+                    </p>
+
+                    <div style="display: flex; justify-content: center">
+                        <a href="{% url 'proposta' livro.id %}" class="btn btn-primary">Fazer proposta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+        {% else %}
+        <h6>Nenhum livro encontrado</h6>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
